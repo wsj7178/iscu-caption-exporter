@@ -85,108 +85,10 @@ async function getPageDetailView ({ wsUnitCnt, contentList }) {
         lmsvtl_yn: '',
         contentId,
         mapGlobalTools: {},
-        // mapResource: {
-        //   F8728381: {
-        //     id: 'F8728381',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775558_p.html?pageSn=775558&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   F8728382: {
-        //     id: 'F8728382',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775559_p.html?pageSn=775559&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   F8728383: {
-        //     id: 'F8728383',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775560_p.html?pageSn=775560&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   F8728384: {
-        //     id: 'F8728384',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775561_p.html?pageSn=775561&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   F8728385: {
-        //     id: 'F8728385',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775562_p.html?pageSn=775562&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   }
-        // },
-        // mapResourcePath: {
-        //   '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775558_p.html?pageSn=775558&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403': {
-        //     id: 'F8728381',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775558_p.html?pageSn=775558&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775559_p.html?pageSn=775559&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403': {
-        //     id: 'F8728382',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775559_p.html?pageSn=775559&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775560_p.html?pageSn=775560&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403': {
-        //     id: 'F8728383',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775560_p.html?pageSn=775560&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775561_p.html?pageSn=775561&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403': {
-        //     id: 'F8728384',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775561_p.html?pageSn=775561&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   },
-        //   '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775562_p.html?pageSn=775562&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403': {
-        //     id: 'F8728385',
-        //     part: 'slide',
-        //     type: 'weburl',
-        //     url: '/Contents/15521200/440401/1887123/15521200_2022_2_440401_775562_p.html?pageSn=775562&subject_yy=2022&subject_shtm=2&lecture_num=1552120001&ws_num=7&ws_seqno=440401&lmsuser_id=12107403',
-        //     base_url: 'https://stream.iscu.ac.kr/stream',
-        //     duration: '120',
-        //     used: 'true'
-        //   }
-        // },
-        // mapToolkit: null,
         pageSn,
-        // subject_yy: '2022',
-        // subject_shtm: '2'
       },
     })
     const dataContent = JSON.parse(result.data.data.content)
-    // console.log(JSON.stringify(dataContent, null, 2))
     /**
      *
      * @param {any[]} data
@@ -242,5 +144,4 @@ async function getCaption (captionId) {
   })
   const resultCaption = filteredLines.reduce((prev, curr) => prev + curr + '\n')
   fsp.writeFile(path.join(process.cwd(), 'caption.txt'), resultCaption)
-  // console.log(resultCaption)
 })()
