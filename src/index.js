@@ -4,7 +4,10 @@ import { JSDOM } from 'jsdom'
 import { promises as fsp } from 'fs'
 import path from 'path'
 
-async function getLoadViewer () {
+async function getLoadViewer ({
+  wsNum,
+  wsSeqNo,
+}) {
   const result = await axios({
     url: 'https://lecture.iscu.ac.kr/lcms/contents/viewer/loadViewerXml.scu',
     params: {
@@ -16,8 +19,8 @@ async function getLoadViewer () {
       open_shtm: 2,
       lecture_num: process.env.lecture_num,
       contents_seqno: process.env.contents_seqno,
-      ws_seqno: process.env.ws_seqno,
-      ws_num: process.env.ws_num,
+      ws_seqno: wsSeqNo,
+      ws_num: wsNum,
       clfy_type: 'U',
       grade: '',
       lmsuser_id: process.env.lmsuser_id,
@@ -51,7 +54,7 @@ async function getLoadViewer () {
   }
 }
 
-async function getPageDetailView ({ wsUnitCnt, contentList }) {
+async function getPageDetailView ({ wsUnitCnt, contentList, wsNum, wsSeqNo }) {
   const captionIdList = []
   for (const { id: contentId, pageSn } of contentList) {
     const result = await axios({
@@ -72,8 +75,8 @@ async function getPageDetailView ({ wsUnitCnt, contentList }) {
         // open_shtm: '2',
         lecture_num: process.env.lecture_num,
         contents_seqno: process.env.contents_seqno,
-        ws_seqno: process.env.ws_seqno,
-        ws_num: process.env.ws_num,
+        ws_seqno: wsSeqNo,
+        ws_num: wsNum,
         clfy_type: 'U',
         grade: '',
         lmsuser_id: process.env.lmsuser_id,
@@ -125,15 +128,12 @@ async function getCaption (captionId) {
   return res.data.data.content
 }
 
-(async () => {
-  const { contentList, wsUnitCnt } = await getLoadViewer()
-  const captionIdList = await getPageDetailView({ contentList, wsUnitCnt })
-  /** @type {string} */
-  const captions = (await Promise.all(captionIdList.map(captionId => getCaption(captionId)))).reduce((prev, curr) => prev + curr)
-
-  const lines = captions.split('\n')
-
-  const filteredLines = lines.filter((line) => {
+/**
+ * 
+ * @param {string} captions 
+ */
+async function cleanCaption (captions) {
+  const filteredLines = captions.split('\n').filter((line) => {
     line = line.trim()
     if (line === '') return false
     const timeRegexp = /\d{2}:\d{2}:\d{2}.\d{3} --> \d{2}:\d{2}:\d{2}.\d{3}/ig
@@ -143,5 +143,35 @@ async function getCaption (captionId) {
     return true
   })
   const resultCaption = filteredLines.reduce((prev, curr) => prev + curr + '\n')
-  fsp.writeFile(path.join(process.cwd(), 'caption.txt'), resultCaption)
-})()
+  return resultCaption
+}
+
+const getCaptionOfWeek = async ({ wsNum, wsSeqNo }) => {
+  const { contentList, wsUnitCnt } = await getLoadViewer({
+    wsNum,
+    wsSeqNo,
+  })
+  const captionIdList = await getPageDetailView({ contentList, wsUnitCnt, wsNum, wsSeqNo })
+  /** @type {string} */
+  const captions = (await Promise.all(captionIdList.map(captionId => getCaption(captionId)))).reduce((prev, curr) => prev + curr)
+
+  return cleanCaption(captions)
+}
+
+async function main() {
+  const startWsNum = Number.parseInt(process.env.ws_num)
+  const startWsSeqNo = Number.parseInt(process.env.ws_seqno)
+  const weekCount = Number.parseInt(process.env.week_count)
+
+  let result = ""
+  for (let i = 0; i < weekCount; i++) {
+    const wsNum = (startWsNum + i).toString()
+    const wsSeqNo = (startWsSeqNo + i).toString()
+    const caption = await getCaptionOfWeek({ wsNum, wsSeqNo })
+    result += caption
+  }
+  
+  fsp.writeFile(path.join(process.cwd(), 'caption.txt'), result)
+}
+
+main()
