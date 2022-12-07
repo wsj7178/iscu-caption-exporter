@@ -102,10 +102,15 @@ async function getPageDetailView ({ wsUnitCnt, contentList, wsNum, wsSeqNo }) {
         if (data.caption) {
           return data.caption.ko.value
         }
-        if (!data.data || !Array.isArray(data.data)) {
+        if (!data.data) {
           continue
         }
-        const finded = findCaptionId(data.data)
+        let finded
+        if (Array.isArray(data.data)) {
+          finded = findCaptionId(data.data)
+        } else if (Array.isArray(data.data.cell)) (
+          finded = findCaptionId(data.data.cell)
+        )
         if (finded) return finded
       }
     }
@@ -152,8 +157,9 @@ const getCaptionOfWeek = async ({ wsNum, wsSeqNo }) => {
     wsSeqNo,
   })
   const captionIdList = await getPageDetailView({ contentList, wsUnitCnt, wsNum, wsSeqNo })
-  /** @type {string} */
-  const captions = (await Promise.all(captionIdList.map(captionId => getCaption(captionId)))).reduce((prev, curr) => prev + curr)
+  const rawCaption = (await Promise.all(captionIdList.map(captionId => getCaption(captionId))))
+  if (rawCaption.length === 0) return ''
+  const captions = rawCaption.reduce((prev, curr) => prev + curr)
 
   return cleanCaption(captions)
 }
