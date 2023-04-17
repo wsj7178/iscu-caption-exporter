@@ -145,6 +145,7 @@ async function cleanCaption (captions) {
     if (timeRegexp.test(line)) return false
     const webVTTRegexp = /WEBVTT Kind: .+; Language: .+/ig
     if (webVTTRegexp.test(line)) return false
+    if (line === 'WEBVTT') return false
     return true
   })
   const resultCaption = filteredLines.reduce((prev, curr) => prev + curr + '\n')
@@ -159,7 +160,7 @@ const getCaptionOfWeek = async ({ wsNum, wsSeqNo }) => {
   const captionIdList = await getPageDetailView({ contentList, wsUnitCnt, wsNum, wsSeqNo })
   const rawCaption = (await Promise.all(captionIdList.map(captionId => getCaption(captionId))))
   if (rawCaption.length === 0) return ''
-  const captions = rawCaption.reduce((prev, curr) => prev + curr)
+  const captions = rawCaption.reduce((prev, curr) => prev + '\n' + curr)
 
   return cleanCaption(captions)
 }
