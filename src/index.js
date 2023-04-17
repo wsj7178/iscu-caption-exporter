@@ -91,6 +91,7 @@ async function getPageDetailView ({ wsUnitCnt, contentList, wsNum, wsSeqNo }) {
         pageSn,
       },
     })
+    if (!result.data.data) continue
     const dataContent = JSON.parse(result.data.data.content)
     /**
      *
