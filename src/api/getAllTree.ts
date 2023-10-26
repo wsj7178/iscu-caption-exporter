@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { StudyTree } from '../types/StudyTree'
+import { iscuAxios } from './iscuAxios'
 
 /**
  * 강의 목록과 세부 목차 tree를 가져옵니다.
@@ -12,7 +12,7 @@ export async function getAllTree(params: {
   contents_seqno: string
   lecture_num: string
 }) {
-  const result = await axios({
+  const result = await iscuAxios({
     url: 'https://home.iscu.ac.kr/lcms/contents/toc/doGetAllTree.scu',
     method: 'post',
     data: {

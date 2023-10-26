@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { SectionDetail } from '../types/SectionDetail'
+import { iscuAxios } from './iscuAxios'
 
 /**
  * 동영상 section 의 상세 정보를 불러옵니다.
@@ -10,7 +10,7 @@ export async function getSectionDetail(params: {
   /** StudyTreeNode 의 id를 getEndTocSeqno 함수를 통해 추출한 값 */
   endTocSeqno: string
 }) {
-  const res = await axios({
+  const res = await iscuAxios({
     url: 'https://home.iscu.ac.kr/cdms/progress/steptoc/doTocItemView.scu',
     method: 'POST',
     data: {

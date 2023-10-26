@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { iscuAxios } from './iscuAxios'
 
 /**
  * lcms/contents/viewer/viewerPageStudyLogSave.scu 호출
@@ -10,7 +10,7 @@ export function viewerPageStudyLogSave(params: {
   pageSn: string
   ws_seqno: string
 }) {
-  axios({
+  iscuAxios({
     url: 'https://home.iscu.ac.kr/lcms/contents/viewer/viewerPageStudyLogSave.scu',
     method: 'POST',
     data: {

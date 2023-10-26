@@ -1,12 +1,12 @@
-import axios from 'axios'
 import { ViewerInitDataResponse } from '../types/ViewerInitDataResponse'
+import { iscuAxios } from './iscuAxios'
 
 export async function viewerInitData(parmas: {
   contents_seqno: string
   ws_seqno: string
   lecture_num: string
 }) {
-  const res = await axios({
+  const res = await iscuAxios({
     url: 'https://home.iscu.ac.kr/lcms/contents/viewer/viewerInitData.scu',
     method: 'POST',
     headers: {

@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { ContentDataData0, ParsedContentType } from '../types/ParsedContentType'
+import { iscuAxios } from './iscuAxios'
 
 /**
  * 사실 정확히 뭐하는 API 인지 모르겠고
@@ -17,7 +17,7 @@ export async function getViewerPageStudyLogData(params: {
   ws_seqno: string
 }) {
   console.log('params', params)
-  const result = await axios({
+  const result = await iscuAxios({
     url: 'https://home.iscu.ac.kr/lcms/contents/viewer/viewerPageStudyLogData.scu',
     method: 'post',
     data: {
