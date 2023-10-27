@@ -17,7 +17,7 @@ async function main() {
 
   const browser = await puppeteer.launch({
     headless: false,
-    devtools: true,
+    devtools: false,
   })
   const page = await browser.newPage()
   await page.setViewport({
