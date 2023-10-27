@@ -1,75 +1,23 @@
 import 'dotenv/config'
 import EventEmitter from 'events'
 import { readFile, writeFile } from 'fs/promises'
-import puppeteer, { Frame, Page } from 'puppeteer'
+import puppeteer, { Page } from 'puppeteer'
+import { captionFileWriter } from './classes/CaptionFileWriter'
+import { clickAllStudyIndex } from './functions/clickAllStudyIndex'
+import { clickExitStudy } from './functions/clickExitStudy'
+import { clickLecture } from './functions/clickLecture'
+import { clickStudy } from './functions/clickStudy'
+import { closeModal } from './functions/closeModal'
+import { getStudyFrame } from './functions/getStudyFrame'
 
 const eventEmitter = new EventEmitter()
-
-function waitForLoad(page: Page | Frame) {
-  return new Promise<void>((res) => {
-    page.once('load', () => {
-      res()
-    })
-  })
-}
-
-function clickLecture(page: Page, lectureId: string) {
-  return new Promise((res, rej) => {
-    waitForLoad(page).then(res)
-    page.click(`a[onclick="fn_goLecture('${lectureId}')"]`).catch(rej)
-  })
-}
-
-async function clickStudy(page: Page, week: number) {
-  const trEl = await page.$(`tr[class*="${week}_ws1"] a`)
-  if (!trEl) throw new Error('No element')
-
-  await trEl.click()
-}
-
-async function clickHambugerMenu(frame: Frame) {
-  const btn = await frame.$('a[button="toggle-catalog"]')
-  if (!btn) throw new Error('No btn element')
-  await btn.evaluate((b) => b.click())
-}
-
-async function clickAllStudyIndex(frame: Frame) {
-  const linkList = await frame.$$('.cundal-app-toc-list a')
-  console.log('linkList length', linkList.length)
-  for (const link of linkList) {
-    await link.evaluate((l) => l.click())
-    await new Promise<void>((res) => {
-      function getCaptionCallback() {
-        console.log('success caption')
-        res()
-      }
-      eventEmitter.once('get-caption', getCaptionCallback)
-      setTimeout(() => {
-        console.log('timeout caption')
-        eventEmitter.off('get-caption', getCaptionCallback)
-        res()
-      }, 3000)
-    })
-  }
-}
-
-async function getStudyFrame(page: Page) {
-  const frame = await page.waitForSelector(
-    'iframe[src*="/cdms/scuNewViewer/cundal/viewer/viewer.html"]'
-  )
-  if (!frame) throw new Error('No frame element')
-  return frame.contentFrame()
-}
-
-async function waitTimeout(ms: number) {
-  return new Promise((res) => setTimeout(res, ms))
-}
 
 async function main() {
   const lectureId = process.env.lecture_num!
 
   const browser = await puppeteer.launch({
     headless: false,
+    devtools: true,
   })
   const page = await browser.newPage()
   await page.setViewport({
@@ -77,6 +25,7 @@ async function main() {
     height: 700,
   })
   await loadCookies(page)
+
   async function onPageLoad() {
     console.log('Page loaded!')
     console.log(page.url())
@@ -93,29 +42,31 @@ async function main() {
     }
   }
   async function afterLoad() {
-    console.log('1')
     await clickLecture(page, lectureId)
-    console.log('2')
-    await waitTimeout(2000)
-    await clickStudy(page, 3)
-    console.log('3')
-    const frame = await getStudyFrame(page)
-    console.log('4')
-    await waitTimeout(3000)
-    await frame.waitForSelector('.cundal-app-toc-list')
-    console.log('5')
-    await clickHambugerMenu(frame)
-    console.log('6')
-    await clickAllStudyIndex(frame)
+    await closeModal(page)
+
+    const weekCount = Number(process.env.week_count)
+    for (let i = 1; i <= weekCount; i++) {
+      console.log(i + ' 주차')
+      await clickStudy(page, i)
+      const frame = await getStudyFrame(page)
+      await frame.waitForSelector('.cundal-app-toc-list')
+      // 메뉴 안열어도 정상동작함
+      // await clickHambugerMenu(frame)
+      await clickAllStudyIndex(frame, eventEmitter)
+      await clickExitStudy(frame)
+    }
+    await captionFileWriter.writeFileToCaption()
+    await browser.close()
   }
+
   page.on('load', onPageLoad)
   page.on('response', (response) => {
     if (
       response.url() ===
       'https://home.iscu.ac.kr/cdms/progress/devstatu/devstatuPageMakerCaptionDetailView.scu'
     ) {
-      console.log('onResponse', response.url())
-      eventEmitter.emit('get-caption')
+      eventEmitter.emit('get-caption', response)
     }
   })
   await page.goto('https://home.iscu.ac.kr/wlms/lechall/main/mainList.scu')

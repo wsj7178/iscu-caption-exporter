@@ -20,6 +20,7 @@ module.exports = {
   ignorePatterns: ['dist/**/*'],
   rules: {
     'comma-dangle': ['error', 'only-multiline'],
+    'no-async-promise-executor': 'off',
     'prettier/prettier': 'error',
     'import/order': [
       'error',
