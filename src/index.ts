@@ -45,8 +45,9 @@ async function main() {
     await clickLecture(page, lectureId)
     await closeModal(page)
 
+    const startWeek = Number(process.env.start_week)
     const weekCount = Number(process.env.week_count)
-    for (let i = 1; i <= weekCount; i++) {
+    for (let i = startWeek; i <= startWeek + weekCount - 1; i++) {
       console.log(i + ' 주차')
       await clickStudy(page, i)
       const frame = await getStudyFrame(page)
