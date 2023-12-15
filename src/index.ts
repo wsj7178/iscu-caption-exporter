@@ -49,13 +49,22 @@ async function main() {
     const weekCount = Number(process.env.week_count)
     for (let i = startWeek; i <= startWeek + weekCount - 1; i++) {
       console.log(i + ' 주차')
-      await clickStudy(page, i)
-      const frame = await getStudyFrame(page)
-      await frame.waitForSelector('.cundal-app-toc-list')
-      // 메뉴 안열어도 정상동작함
-      // await clickHambugerMenu(frame)
-      await clickAllStudyIndex(frame, eventEmitter)
-      await clickExitStudy(frame)
+      try {
+        await clickStudy(page, i)
+        const frame = await getStudyFrame(page)
+        await frame.waitForSelector('.cundal-app-toc-list')
+        // 메뉴 안열어도 정상동작함
+        // await clickHambugerMenu(frame)
+        await clickAllStudyIndex(frame, eventEmitter)
+        await clickExitStudy(frame)
+      } catch (e) {
+        if ((e as Error).message === 'No element') {
+          console.log('skip no start button')
+          continue
+        } else {
+          throw e
+        }
+      }
     }
     await captionFileWriter.writeFileToCaption()
     await browser.close()
