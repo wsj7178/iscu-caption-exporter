@@ -7,7 +7,9 @@ export async function clickAllStudyIndex(
   frame: Frame,
   eventEmitter: EventEmitter
 ) {
-  const linkList = await frame.$$('.cundal-app-toc-list a')
+  const linkList = await frame.$$(
+    '.cundal-app-toc-list div[data-typecd="PAGE"]'
+  )
   if (linkList.length === 0) {
     throw new Error('No link element')
   }
