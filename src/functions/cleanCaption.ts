@@ -9,6 +9,7 @@ export function cleanCaption(captions: string): string {
     if (line === 'WEBVTT') return false
     return true
   })
+  if (filteredLines.length === 0) return ''
   const resultCaption = filteredLines.reduce((prev, curr) => prev + curr + '\n')
   return resultCaption
 }
